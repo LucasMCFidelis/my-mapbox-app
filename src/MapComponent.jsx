@@ -4,14 +4,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios"; // Importando o axios
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
 
 const MapComponent = () => {
   // Função para buscar os eventos
   const fetchEvents = async () => {
     try {
-      const response = await axios.get("http://localhost:3131/events");
-      console.log(response.data);
-
+      const response = await axios.get(EVENT_SERVICE_URL);
       return response.data; // Retorna os dados diretamente
     } catch (error) {
       throw new Error("Erro ao buscar eventos: " + error.message); // Lança um erro se houver falha na requisição
@@ -28,12 +27,6 @@ const MapComponent = () => {
     queryKey: ["events"], // A chave única para a consulta
     queryFn: fetchEvents, // Função de busca dos eventos
   });
-
-  // Adicionando logs para verificar se os dados estão sendo carregados
-  console.log("Eventos:", events);
-  console.log("isLoading:", isLoading);
-  console.log("isError:", isError);
-  console.log("Error:", error);
 
   if (isLoading) {
     return <div>Carregando...</div>;
@@ -69,7 +62,7 @@ const MapComponent = () => {
             >
               <div
                 style={{
-                  backgroundColor: `${event.eventPrice > 0 ? "red" : "blue" }`,
+                  backgroundColor: event.eventPrice > 0 ? "red" : "blue",
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
@@ -81,10 +74,7 @@ const MapComponent = () => {
                   fontSize: "10px",
                 }}
               >
-                {event.eventTitle && event.eventTitle[0]
-                  ? event.eventTitle[0]
-                  : "?"}{" "}
-                {/* Exibe a primeira letra do título */}
+                {event?.eventTitle?.[0] ?? "?"}
               </div>
             </Marker>
           ))
