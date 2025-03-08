@@ -40,6 +40,12 @@ const MapComponent = () => {
     );
   }
 
+  // Definição dos limites para João Pessoa
+  const bounds = [
+    [-34.95, -7.25], // Coordenadas sudoeste (SW)
+    [-34.75, -7.00], // Coordenadas nordeste (NE)
+  ];
+
   return (
     <div className="h-screen w-full">
       <Map
@@ -51,6 +57,8 @@ const MapComponent = () => {
         }}
         style={{ width: "100%", height: "500px" }}
         mapStyle="mapbox://styles/mapbox/streets-v11"
+        maxBounds={bounds} // Restringe o movimento dentro desses limites
+        minZoom={10} // Impede que o usuário afaste muito o zoom
       >
         {/* Renderiza os marcadores para cada evento */}
         {events && events.length > 0 ? (
