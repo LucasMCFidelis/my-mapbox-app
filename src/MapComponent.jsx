@@ -1,12 +1,22 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Map, { Marker } from "react-map-gl";
+import Map, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
 
+const initialViewState = {
+  longitude: -34.861,
+  latitude: -7.115,
+  zoom: 12,
+};
+
 const MapComponent = () => {
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [viewState, setViewState] = useState(initialViewState);
+
   const fetchEvents = async () => {
     try {
       const response = await axios.get(EVENT_SERVICE_URL);
@@ -54,8 +64,9 @@ const MapComponent = () => {
   return (
     <div className="h-screen w-full">
       <Map
+        {...viewState}
+        onMove={(evt) => setViewState(evt.viewState)}
         mapboxAccessToken={MAPBOX_TOKEN}
-        initialViewState={{ longitude: -34.861, latitude: -7.115, zoom: 12 }}
         style={{ width: "100%", height: "500px" }}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         maxBounds={bounds}
@@ -69,8 +80,17 @@ const MapComponent = () => {
               latitude={event.latitude}
             >
               <div
+                onClick={() => {
+                  setSelectedEvent(event);
+                  setViewState({
+                    longitude: event.longitude,
+                    latitude: event.latitude,
+                    zoom: 14,
+                    transitionDuration: 500, // Suaviza a transição
+                  });
+                }}
                 style={{
-                  backgroundColor: event.eventPrice > 0 ? "red" : "blue",
+                  backgroundColor: event.eventPrice > 0 ? "#761AB3" : "#1AB393",
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
@@ -80,6 +100,7 @@ const MapComponent = () => {
                   color: "white",
                   fontWeight: "bold",
                   fontSize: "10px",
+                  cursor: "pointer",
                 }}
               >
                 {event?.eventTitle?.[0] ?? "?"}
@@ -88,6 +109,34 @@ const MapComponent = () => {
           ))
         ) : (
           <div>Sem eventos para exibir</div>
+        )}
+
+        {selectedEvent && (
+          <Popup
+            longitude={selectedEvent.longitude}
+            latitude={selectedEvent.latitude}
+            onClose={() => {
+              setSelectedEvent(null);
+              setViewState(initialViewState); // Resetar para a posição inicial
+            }}
+            closeButton
+            closeOnClick={false}
+            anchor="top"
+          >
+            <div style={{ color: "black" }}>
+              <h3 className="font-bold">{selectedEvent.eventTitle}</h3>
+              <p>{selectedEvent.eventDescription}</p>
+              <p>
+                <strong>Endereço:</strong> {selectedEvent.eventAddressStreet},{" "}
+                {selectedEvent.eventAddressNumber},{" "}
+                {selectedEvent.eventAddressNeighborhood}
+              </p>
+              <p>
+                <strong>Data:</strong>{" "}
+                {new Date(selectedEvent.startDateTime).toLocaleString()}
+              </p>
+            </div>
+          </Popup>
         )}
       </Map>
     </div>
