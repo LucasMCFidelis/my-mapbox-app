@@ -1,31 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
 import Map, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import axios from "axios"; // Importando o axios
+import axios from "axios";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
 
 const MapComponent = () => {
-  // Função para buscar os eventos
   const fetchEvents = async () => {
     try {
       const response = await axios.get(EVENT_SERVICE_URL);
-      return response.data; // Retorna os dados diretamente
+      return response.data;
     } catch (error) {
-      throw new Error("Erro ao buscar eventos: " + error.message); // Lança um erro se houver falha na requisição
+      throw new Error("Erro ao buscar eventos: " + error.message);
     }
   };
 
-  // Utilizando useQuery para gerenciar a consulta
   const {
     data: events,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["events"], // A chave única para a consulta
-    queryFn: fetchEvents, // Função de busca dos eventos
+    queryKey: ["events"],
+    queryFn: fetchEvents,
   });
 
   if (isLoading) {
@@ -40,29 +38,31 @@ const MapComponent = () => {
     );
   }
 
-  // Definição dos limites para João Pessoa
+  const now = new Date().toISOString();
+  const filteredEvents =
+    events?.filter((event) => {
+      return event.endDateTime
+        ? event.endDateTime > now
+        : event.startDateTime > now;
+    }) || [];
+
   const bounds = [
-    [-34.95, -7.25], // Coordenadas sudoeste (SW)
-    [-34.75, -7.00], // Coordenadas nordeste (NE)
+    [-34.95, -7.25],
+    [-34.75, -7.0],
   ];
 
   return (
     <div className="h-screen w-full">
       <Map
         mapboxAccessToken={MAPBOX_TOKEN}
-        initialViewState={{
-          longitude: -34.861, // Atualizado para João Pessoa
-          latitude: -7.115, // Atualizado para João Pessoa
-          zoom: 12, // Ajustado o zoom para a cidade
-        }}
+        initialViewState={{ longitude: -34.861, latitude: -7.115, zoom: 12 }}
         style={{ width: "100%", height: "500px" }}
         mapStyle="mapbox://styles/mapbox/streets-v11"
-        maxBounds={bounds} // Restringe o movimento dentro desses limites
-        minZoom={10} // Impede que o usuário afaste muito o zoom
+        maxBounds={bounds}
+        minZoom={10}
       >
-        {/* Renderiza os marcadores para cada evento */}
-        {events && events.length > 0 ? (
-          events.map((event) => (
+        {filteredEvents.length > 0 ? (
+          filteredEvents.map((event) => (
             <Marker
               key={event.id}
               longitude={event.longitude}
