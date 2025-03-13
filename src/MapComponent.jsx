@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import Map, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
+import "./MapComponent.css";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
@@ -62,7 +63,7 @@ const MapComponent = () => {
   ];
 
   return (
-    <div className="h-screen w-full">
+    <div>
       <Map
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
@@ -71,6 +72,7 @@ const MapComponent = () => {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         maxBounds={bounds}
         minZoom={10}
+        onClick={() => setSelectedEvent(null)} // Fecha o popup ao clicar no mapa
       >
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
@@ -80,28 +82,20 @@ const MapComponent = () => {
               latitude={event.latitude}
             >
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation(); // Evita que o clique feche o popup imediatamente
                   setSelectedEvent(event);
                   setViewState({
                     longitude: event.longitude,
                     latitude: event.latitude,
                     zoom: 14,
-                    transitionDuration: 500, // Suaviza a transição
+                    transitionDuration: 500,
                   });
                 }}
                 style={{
                   backgroundColor: event.eventPrice > 0 ? "#761AB3" : "#1AB393",
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  color: "white",
-                  fontWeight: "bold",
-                  fontSize: "10px",
-                  cursor: "pointer",
                 }}
+                className="marker"
               >
                 {event?.eventTitle?.[0] ?? "?"}
               </div>
@@ -120,7 +114,7 @@ const MapComponent = () => {
               setViewState(initialViewState); // Resetar para a posição inicial
             }}
             closeButton
-            closeOnClick={false}
+            closeOnClick={true} // Fecha ao clicar fora
             anchor="top"
           >
             <div style={{ color: "black" }}>

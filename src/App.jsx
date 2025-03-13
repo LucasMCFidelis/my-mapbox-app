@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MapComponent from "./MapComponent";
+import MapImageCatalog from "./MapImageCatalog";
 
 function App() {
   const queryClient = new QueryClient();
@@ -7,8 +8,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div>
-        <h1 className="text-center text-2xl font-bold mt-4">Mapa com Mapbox</h1>
+        <h1>Mapa com Mapbox</h1>
         <MapComponent />
+        <MapImageCatalog></MapImageCatalog>
       </div>
     </QueryClientProvider>
   );

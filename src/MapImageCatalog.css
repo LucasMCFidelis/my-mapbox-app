@@ -1,0 +1,180 @@
+/* Catalogo.css */
+
+.container {
+  margin-top: 85px;
+  padding: 24px;
+  background-color: #f7fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  justify-content: space-between; /* Para espaçar os elementos */
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* Divide em três partes: título, input e botão */
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+  font-family: "Poppins", sans-serif;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2d3748;
+  text-align: left; /* Garante que o título fique alinhado à esquerda */
+  margin-left: 155px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centraliza horizontalmente */
+  width: 100%; /* Ocupa toda a área do meio */
+  max-width: 400px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  padding: 8px 16px;
+  background-color: white;
+  margin: 0 auto; /* Garante que fique centralizado */
+}
+
+.search-icon {
+  color: #6b46c1;
+  font-size: 1.2rem;
+}
+
+.search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #a6a4a4;
+}
+
+.login-button {
+  background-color: #6b46c1;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #5a35a1;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  color: #4a5568;
+  font-size: 0.875rem;
+  width: 100%;
+  padding: 16px 0;
+}
+
+.filter-title {
+  font-weight: bold;
+}
+
+.event-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+  width: 80%;
+}
+
+.event-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: left;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-image {
+  background-color: #1ab393;
+  height: 180px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.event-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: bold;
+}
+
+.event-name {
+  font-weight: bold;
+  font-size: 1.125rem;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.event-description {
+  color: #4a5568;
+  font-size: 0.875rem;
+}
+
+.help-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #6b46c1;
+  color: white;
+  padding: 12px;
+  border-radius: 40%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.help-button:hover {
+  background-color: #542e9c;
+}
+
+.error-message {
+  color: red;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Configuração de grid para diferentes larguras de tela */
+@media (min-width: 640px) {
+  .event-list {
+    grid-template-columns: 1fr 1fr; /* 2 cards por linha */
+  }
+}
+
+@media (min-width: 768px) {
+  .event-list {
+    grid-template-columns: 1fr 1fr 1fr; /* 3 cards por linha */
+  }
+}
+
+@media (min-width: 1024px) {
+  .event-list {
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 cards por linha */
+  }
+}
+
+@media (min-width: 1280px) {
+  .event-list {
+    grid-template-columns: repeat(4, 1fr); /* 5 cards por linha */
+  }
+}
