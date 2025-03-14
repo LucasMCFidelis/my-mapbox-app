@@ -157,24 +157,24 @@
 /* Configuração de grid para diferentes larguras de tela */
 @media (min-width: 640px) {
   .event-list {
-    grid-template-columns: 1fr 1fr; /* 2 cards por linha */
+    grid-template-columns: repeat(2, 1fr); /* 2 cards por linha */
   }
 }
 
 @media (min-width: 768px) {
   .event-list {
-    grid-template-columns: 1fr 1fr 1fr; /* 3 cards por linha */
+    grid-template-columns: repeat(3, 1fr); /* 3 cards por linha */
   }
 }
 
 @media (min-width: 1024px) {
   .event-list {
-    grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 cards por linha */
+    grid-template-columns: repeat(4, 1fr); /* 4 cards por linha */
   }
 }
 
 @media (min-width: 1280px) {
   .event-list {
-    grid-template-columns: repeat(4, 1fr); /* 5 cards por linha */
+    grid-template-columns: repeat(5, 1fr); /* 5 cards por linha */
   }
 }

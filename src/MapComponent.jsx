@@ -20,7 +20,7 @@ const MapComponent = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(EVENT_SERVICE_URL);
+      const response = await axios.get(`${EVENT_SERVICE_URL}/events`);
       return response.data;
     } catch (error) {
       throw new Error("Erro ao buscar eventos: " + error.message);

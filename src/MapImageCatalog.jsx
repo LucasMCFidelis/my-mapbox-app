@@ -7,7 +7,7 @@ const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
 const MapImageCatalog = () => {
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(EVENT_SERVICE_URL);
+      const response = await axios.get(`${EVENT_SERVICE_URL}/events`);
       return response.data;
     } catch (error) {
       throw new Error("Erro ao buscar eventos: " + error.message);
@@ -51,7 +51,7 @@ const MapImageCatalog = () => {
               <div
                 className="event-image"
                 style={{
-                  backgroundImage: `url(http://localhost:3131/map?latitude=${event.latitude}&longitude=${event.longitude})`,
+                  backgroundImage: `url(${EVENT_SERVICE_URL}/map?latitude=${event.latitude}&longitude=${event.longitude})`,
                 }}
               ></div>
               <p className="event-date">
