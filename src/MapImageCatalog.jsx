@@ -1,46 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import "./MapImageCatalog.css";
+import { useEvents } from "./context/EventsContext";
 
 const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
 
 const MapImageCatalog = () => {
-  const fetchEvents = async () => {
-    try {
-      const response = await axios.get(`${EVENT_SERVICE_URL}/events`);
-      return response.data;
-    } catch (error) {
-      throw new Error("Erro ao buscar eventos: " + error.message);
-    }
-  };
+  const { filteredEvents, isLoadingEvents, isErrorEvents, errorEvents } =
+    useEvents();
 
-  const {
-    data: events,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["events"],
-    queryFn: fetchEvents,
-  });
-
-  if (isLoading) {
-    return <div>Carregando...</div>;
+  if (isLoadingEvents) {
+    return <div>Carregando eventos...</div>;
   }
 
-  if (isError) {
+  if (isErrorEvents) {
     return (
-      <div>Erro ao carregar evento {error.message || "Erro desconhecido"}</div>
+      <div>
+        Erro ao carregar eventos: {errorEvents.message || "Erro desconhecido"}
+      </div>
     );
   }
-
-  const now = new Date().toISOString();
-  const filteredEvents =
-    events?.filter((event) => {
-      return event.endDateTime
-        ? event.endDateTime > now
-        : event.startDateTime > now;
-    }) || [];
 
   return (
     <div className="container">

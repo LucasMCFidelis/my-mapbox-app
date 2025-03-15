@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEvents } from "./context/EventsContext";
 import Map, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import axios from "axios";
 import "./MapComponent.css";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
-const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
 
 const initialViewState = {
   longitude: -34.861,
@@ -15,47 +13,27 @@ const initialViewState = {
 };
 
 const MapComponent = () => {
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [viewState, setViewState] = useState(initialViewState);
-
-  const fetchEvents = async () => {
-    try {
-      const response = await axios.get(`${EVENT_SERVICE_URL}/events`);
-      return response.data;
-    } catch (error) {
-      throw new Error("Erro ao buscar eventos: " + error.message);
-    }
-  };
-
   const {
-    data: events,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["events"],
-    queryFn: fetchEvents,
-  });
+    filteredEvents,
+    isLoadingEvents,
+    isErrorEvents,
+    errorEvents,
+    selectedEvent,
+    setSelectedEvent,
+  } = useEvents();
 
-  if (isLoading) {
-    return <div>Carregando...</div>;
+  if (isLoadingEvents) {
+    return <div>Carregando dados dos eventos...</div>;
   }
 
-  if (isError) {
+  if (isErrorEvents) {
     return (
       <div>
-        Erro ao carregar eventos: {error.message || "Erro desconhecido"}
+        Erro ao carregar eventos: {errorEvents.message || "Erro desconhecido"}
       </div>
     );
   }
-
-  const now = new Date().toISOString();
-  const filteredEvents =
-    events?.filter((event) => {
-      return event.endDateTime
-        ? event.endDateTime > now
-        : event.startDateTime > now;
-    }) || [];
 
   const bounds = [
     [-34.95, -7.25],
@@ -77,7 +55,7 @@ const MapComponent = () => {
         {filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
             <Marker
-              key={event.id}
+              key={event.eventId}
               longitude={event.longitude}
               latitude={event.latitude}
             >
