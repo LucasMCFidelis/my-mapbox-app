@@ -42,9 +42,10 @@ const Map = () => {
 
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v12",
+      style: "mapbox://styles/mapbox/standard",
       center: [viewState.longitude, viewState.latitude],
       zoom: viewState.zoom,
+      pitch: 42,
       minZoom: 10,
       maxBounds: maxBounds,
     });
@@ -72,6 +73,7 @@ const Map = () => {
   useEffect(() => {
     if (!mapRef.current) return;
 
+    // Remove marcadores antigos antes de adicionar novos
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 
@@ -79,17 +81,53 @@ const Map = () => {
       if (!event.longitude || !event.latitude) return;
 
       const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <div style="color: black; font-family: Arial, sans-serif;">
-          <h3 style="font-weight: bold; margin-bottom: 5px;">${
-            event.eventTitle
-          }</h3>
-          <p>${event.eventDescription}</p>
-          <p><strong>Endereço:</strong> ${event.eventAddressStreet}, ${
-        event.eventAddressNumber
-      }, ${event.eventAddressNeighborhood}</p>
-          <p><strong>Data:</strong> ${new Date(
-            event.startDateTime
-          ).toLocaleString()}</p>
+        <div style="
+          font-family: Arial, sans-serif; 
+          color: #333; 
+          background-color: white; 
+          padding: 12px; 
+          max-width: 250px;
+          line-height: 1.4;
+        ">
+          <h3 style="
+            font-weight: bold; 
+            font-size: 16px; 
+            margin-bottom: 8px; 
+            color: #761AB3;
+          ">
+            ${event.eventTitle}
+          </h3>
+          
+          <p style="margin: 5px 0; font-size: 14px;">
+            ${event.eventDescription}
+          </p>
+          
+          <p style="
+            margin: 8px 0; 
+            font-size: 13px; 
+            color: #555;
+          ">
+            <strong style="color: #1AB393;">Endereço:</strong> ${
+              event.eventAddressStreet
+            }, ${event.eventAddressNumber}, ${event.eventAddressNeighborhood}
+          </p>
+          
+          <p style="
+            margin: 8px 0; 
+            font-size: 13px; 
+            color: #555;
+          ">
+            <strong style="color: #1AB393;">Data:</strong> 
+            ${new Date(event.startDateTime).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            })} às 
+            ${new Date(event.startDateTime).toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
         </div>
       `);
 
@@ -100,7 +138,23 @@ const Map = () => {
         .setPopup(popup)
         .addTo(mapRef.current);
 
-      marker.getElement().addEventListener("click", () => {
+      const markerElement = marker.getElement();
+      markerElement.style.cursor = "pointer"; // Define o cursor
+
+      // Pegamos o primeiro elemento filho (que é um <svg>)
+      const iconElement = markerElement.firstChild;
+      iconElement.style.transition = "transform 0.2s ease-in-out";
+
+      // Aplica hover no ícone e não no marcador principal
+      markerElement.addEventListener("mouseenter", () => {
+        iconElement.style.transform = "scale(1.3)";
+      });
+
+      markerElement.addEventListener("mouseleave", () => {
+        iconElement.style.transform = "scale(1)";
+      });
+
+      markerElement.addEventListener("click", () => {
         setSelectedEvent(event);
         setViewState({
           longitude: event.longitude,
@@ -126,12 +180,7 @@ const Map = () => {
     );
   }
 
-  return (
-    <div
-      ref={mapContainerRef}
-      className="mapComponent"
-    />
-  );
+  return <div ref={mapContainerRef} className="map-component" />;
 };
 
 export default Map;

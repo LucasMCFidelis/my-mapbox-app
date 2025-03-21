@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MapImageCatalog from "./MapImageCatalog";
 import { EventsProvider } from "./EventsProvider";
 import Map from "./Map";
+import "./App.css"
 
 function App() {
   const queryClient = new QueryClient();
@@ -9,9 +10,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <EventsProvider>
-        <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
+        <div className="app-container">
           <h1>Mapa com Mapbox</h1>
-          <Map />
+          <div className="map-container">
+            <Map/>
+          </div>
+          <MapImageCatalog />
         </div>
       </EventsProvider>
     </QueryClientProvider>
