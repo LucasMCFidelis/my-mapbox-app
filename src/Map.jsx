@@ -17,13 +17,8 @@ const maxBounds = [
 
 const Map = () => {
   const [viewState, setViewState] = useState(initialViewState);
-  const {
-    filteredEvents,
-    isLoadingEvents,
-    isErrorEvents,
-    errorEvents,
-    setSelectedEvent,
-  } = useEvents();
+  const { filteredEvents, isLoadingEvents, isErrorEvents, errorEvents } =
+    useEvents();
 
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -136,6 +131,7 @@ const Map = () => {
     if (!mapRef.current) return;
     mapRef.current.flyTo({
       center: [viewState.longitude, viewState.latitude],
+      zoom: viewState.zoom,
       essential: true,
       duration: 500,
     });
@@ -227,18 +223,17 @@ const Map = () => {
       });
 
       markerElement.addEventListener("click", () => {
-        setSelectedEvent(event);
         setViewState({
           longitude: event.longitude,
           latitude: event.latitude,
-          zoom: 14,
+          zoom: 16,
         });
         setTimeout(() => popup.addTo(mapRef.current), 0);
       });
 
       markersRef.current.push(marker);
     });
-  }, [filteredEvents, setSelectedEvent]);
+  }, [filteredEvents]);
 
   if (isLoadingEvents) {
     return <div>Carregando dados dos eventos...</div>;
