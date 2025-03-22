@@ -28,7 +28,7 @@ const MapImageCatalog = () => {
               <div
                 className="event-image"
                 style={{
-                  backgroundImage: `url(${EVENT_SERVICE_URL}/map?latitude=${event.latitude}&longitude=${event.longitude})`,
+                  backgroundImage: `url(${EVENT_SERVICE_URL}/map?latitude=${event.latitude}&longitude=${event.longitude}&eventPrice=${event.eventPrice})`,
                 }}
               ></div>
               <p className="event-date">
