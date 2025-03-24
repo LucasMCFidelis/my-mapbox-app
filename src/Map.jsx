@@ -26,8 +26,6 @@ const Map = () => {
 
   // Inicializa o mapa apenas uma vez
   useEffect(() => {
-    console.log("mapContainerRef.current:", mapContainerRef.current);
-
     if (!mapContainerRef.current || mapRef.current) return;
 
     if (!import.meta.env.VITE_MAPBOX_ACCESS_TOKEN) {
@@ -72,7 +70,6 @@ const Map = () => {
 
   // Atualiza os marcadores quando os eventos mudam
   useEffect(() => {
-    console.log("Eventos filtrados:", filteredEvents);
     if (!mapRef.current) return;
 
     // Remove marcadores antigos antes de adicionar novos
@@ -169,19 +166,20 @@ const Map = () => {
     });
   }, [filteredEvents]);
 
-  if (isLoadingEvents) {
-    return <div>Carregando dados dos eventos...</div>;
-  }
-
-  if (isErrorEvents) {
+  if (mapContainerRef) {
     return (
-      <div>
-        Erro ao carregar eventos: {errorEvents.message || "Erro desconhecido"}
-      </div>
+      <>
+        <div ref={mapContainerRef} className="map-component" />
+        {isLoadingEvents && <div>Carregando dados dos eventos...</div>}
+        {isErrorEvents && (
+          <div>
+            Erro ao carregar eventos:{" "}
+            {errorEvents.message || "Erro desconhecido"}
+          </div>
+        )}
+      </>
     );
   }
-
-  return <div ref={mapContainerRef} className="map-component" />;
 };
 
 export default Map;
