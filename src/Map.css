@@ -32,3 +32,45 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+.mapboxgl-popup-tip{
+  display: none;
+}
+
+.custom-popup {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: white;
+  padding: 12px;
+  line-height: 1.4;
+  border-radius: 12px;
+  z-index: 9999 !important;
+}
+
+.custom-popup-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 30px 0px 8px 0px;
+  color: #761ab3;
+}
+
+.custom-popup p {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.custom-popup-description {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.custom-popup strong {
+  color: #1ab393;
+}
+
+@media (max-width: 640px) {
+  .custom-popup {
+    padding: 6px;
+  }
+}

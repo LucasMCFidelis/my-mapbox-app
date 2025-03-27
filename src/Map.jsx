@@ -79,44 +79,27 @@ const Map = () => {
     filteredEvents.forEach((event) => {
       if (!event.longitude || !event.latitude) return;
 
-      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <div style="
-          font-family: Arial, sans-serif; 
-          color: #333; 
-          background-color: white; 
-          padding: 12px; 
-          max-width: 250px;
-          line-height: 1.4;
-        ">
-          <h3 style="
-            font-weight: bold; 
-            font-size: 16px; 
-            margin-bottom: 8px; 
-            color: #761AB3;
-          ">
+      const popup = new mapboxgl.Popup({
+        offset: 25,
+        maxWidth: "80vw",
+        className: "custom-popup",
+      }).setHTML(`
+          <h3 class="custom-popup-title">
             ${event.eventTitle}
           </h3>
           
-          <p style="margin: 5px 0; font-size: 14px;">
+          <p class="custom-popup-description">
             ${event.eventDescription}
           </p>
           
-          <p style="
-            margin: 8px 0; 
-            font-size: 13px; 
-            color: #555;
-          ">
-            <strong style="color: #1AB393;">Endereço:</strong> ${
-              event.eventAddressStreet
-            }, ${event.eventAddressNumber}, ${event.eventAddressNeighborhood}
+          <p class="custom-popup-content">
+            <strong>Endereço:</strong> ${event.eventAddressStreet}, ${
+        event.eventAddressNumber
+      }, ${event.eventAddressNeighborhood}
           </p>
           
-          <p style="
-            margin: 8px 0; 
-            font-size: 13px; 
-            color: #555;
-          ">
-            <strong style="color: #1AB393;">Data:</strong> 
+          <p class="custom-popup-content">
+            <strong>Data:</strong> 
             ${new Date(event.startDateTime).toLocaleDateString("pt-BR", {
               day: "2-digit",
               month: "2-digit",
@@ -127,7 +110,6 @@ const Map = () => {
               minute: "2-digit",
             })}
           </p>
-        </div>
       `);
 
       const marker = new mapboxgl.Marker({
