@@ -33,7 +33,7 @@
   cursor: pointer;
 }
 
-.mapboxgl-popup-tip{
+.mapboxgl-popup-tip {
   display: none;
 }
 
@@ -68,6 +68,16 @@
 
 .custom-popup strong {
   color: #1ab393;
+}
+
+.custom-popup button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  background-color: transparent;
+  color: black;
+  font-weight: bold;
 }
 
 @media (max-width: 640px) {

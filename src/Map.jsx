@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useEvents } from "./context/EventsContext";
-import mapboxgl from "mapbox-gl";
+import mapboxgl, { Marker } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Map.css";
+import PopupMap from "./PopupMap";
 
 const initialViewState = {
   longitude: -34.861,
@@ -17,8 +18,13 @@ const maxBounds = [
 
 const Map = () => {
   const [viewState, setViewState] = useState(initialViewState);
-  const { filteredEvents, isLoadingEvents, isErrorEvents, errorEvents } =
-    useEvents();
+  const {
+    filteredEvents,
+    isLoadingEvents,
+    isErrorEvents,
+    errorEvents,
+    setSelectedEvent,
+  } = useEvents();
 
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -79,44 +85,10 @@ const Map = () => {
     filteredEvents.forEach((event) => {
       if (!event.longitude || !event.latitude) return;
 
-      const popup = new mapboxgl.Popup({
-        offset: 25,
-        maxWidth: "80vw",
-        className: "custom-popup",
-      }).setHTML(`
-          <h3 class="custom-popup-title">
-            ${event.eventTitle}
-          </h3>
-          
-          <p class="custom-popup-description">
-            ${event.eventDescription}
-          </p>
-          
-          <p class="custom-popup-content">
-            <strong>Endereço:</strong> ${event.eventAddressStreet}, ${
-        event.eventAddressNumber
-      }, ${event.eventAddressNeighborhood}
-          </p>
-          
-          <p class="custom-popup-content">
-            <strong>Data:</strong> 
-            ${new Date(event.startDateTime).toLocaleDateString("pt-BR", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "2-digit",
-            })} às 
-            ${new Date(event.startDateTime).toLocaleTimeString("pt-BR", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </p>
-      `);
-
       const marker = new mapboxgl.Marker({
         color: event.eventPrice > 0 ? "#761AB3" : "#1AB393",
       })
         .setLngLat([event.longitude, event.latitude])
-        .setPopup(popup)
         .addTo(mapRef.current);
 
       const markerElement = marker.getElement();
@@ -141,27 +113,25 @@ const Map = () => {
           latitude: event.latitude,
           zoom: 16,
         });
-        setTimeout(() => popup.addTo(mapRef.current), 0);
+        setSelectedEvent(event);
       });
 
       markersRef.current.push(marker);
     });
   }, [filteredEvents]);
 
-  if (mapContainerRef) {
-    return (
-      <>
-        <div ref={mapContainerRef} className="map-component" />
-        {isLoadingEvents && <div>Carregando dados dos eventos...</div>}
-        {isErrorEvents && (
-          <div>
-            Erro ao carregar eventos:{" "}
-            {errorEvents.message || "Erro desconhecido"}
-          </div>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      <div ref={mapContainerRef} className="map-component" />
+      {isLoadingEvents && <div>Carregando dados dos eventos...</div>}
+      {isErrorEvents && (
+        <div>
+          Erro ao carregar eventos: {errorEvents.message || "Erro desconhecido"}
+        </div>
+      )}
+      {mapRef.current && <PopupMap map={mapRef.current} />}
+    </>
+  );
 };
 
 export default Map;
