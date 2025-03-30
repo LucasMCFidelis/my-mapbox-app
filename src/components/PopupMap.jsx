@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import mapboxgl from "mapbox-gl";
-import { useEvents } from "./context/EventsContext";
+import { useEvents } from "../context/EventsContext";
 
 const PopupMap = ({ map }) => {
   const contentRef = useRef(document.createElement("div"));

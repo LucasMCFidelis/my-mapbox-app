@@ -1,4 +1,4 @@
-import { EventsContext } from "./context/EventsContext";
+import { EventsContext } from "../context/EventsContext";
 import { useQueries } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import axios from "axios";

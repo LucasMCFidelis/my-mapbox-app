@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useEvents } from "./context/EventsContext";
+import { useEvents } from "../../context/EventsContext";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Map.css";
-import PopupMap from "./PopupMap";
+import PopupMap from "../PopupMap";
 
 const initialViewState = {
   longitude: -34.861,

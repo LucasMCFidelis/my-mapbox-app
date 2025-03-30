@@ -1,5 +1,5 @@
 import "./MapImageCatalog.css";
-import { useEvents } from "./context/EventsContext";
+import { useEvents } from "../../context/EventsContext";
 
 const EVENT_SERVICE_URL = import.meta.env.VITE_EVENT_SERVICE_URL;
 

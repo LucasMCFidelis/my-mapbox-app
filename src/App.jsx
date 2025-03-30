@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import MapImageCatalog from "./MapImageCatalog";
-import { EventsProvider } from "./EventsProvider";
-import Map from "./Map";
+import MapImageCatalog from "./components/imageCatalog/MapImageCatalog";
+import { EventsProvider } from "./components/EventsProvider";
+import Map from "./components/mapComponent/Map";
 import "./App.css";
 
 function App() {
