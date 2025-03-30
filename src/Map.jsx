@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useEvents } from "./context/EventsContext";
-import mapboxgl, { Marker } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Map.css";
 import PopupMap from "./PopupMap";
